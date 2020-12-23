@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Aux from '../../hoc/Auxiliary';
+import classes from './Layout.module.css';
 
 const layout = (props) => (
   // Auxiliary higher-order component to wrap and immediately output this component.
@@ -14,7 +15,7 @@ const layout = (props) => (
     to the screen. */}
     <div>Toolbar, SideDrawer, Backdrop</div>
 
-    <main>{props.children}</main>
+    <main className={classes.Content}>{props.children}</main>
   </Aux>
 );
 
