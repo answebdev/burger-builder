@@ -11,10 +11,10 @@ const burger = (props) => {
   // So we can't use MAP - we can't just loop through that - because it's an object.
   // Instead, we have to transform this object into an array of the values of the ingredients.
 
-  // So here in the 'burger' function (in the 'burger' component), we'll create a new constant ('transformedIngredients)
+  // So here in the 'burger' function (in the 'burger' component), we'll create a new constant ('transformedIngredients')
   // and use the 'Object' object (a default JavaScript object), which has a 'keys' method,
-  // which extracts the keys of a given object, and turns that into an array - it gives you an array of the keys (so, in our case,
-  // the keys are 'salad', 'bacon', 'cheese', and' 'meat' (see state in BurgerBuilder.js)).
+  // and which extracts the keys of a given object, and turns that into an array - it gives you an array of the keys (so, in our case,
+  // the keys are 'salad', 'bacon', 'cheese', and 'meat' (see state in BurgerBuilder.js)).
   // The values (1, 1, 2, 2) are NOT part of the array.
 
   // So now after doing this, we have an array of strings - of keys.
@@ -26,11 +26,27 @@ const burger = (props) => {
 
   // And then in that function, we want to transform this string value into an array with as many elements
   // as we have ingredients for a given ingredient.
-  const transformedIngredients = Object.keys(props.ingredients).map((igKey) => {
-    return [...Array(props.ingredients[igKey])].map((_, i) => {
-      return <BurgerIngredient key={igKey + i} type={igKey} />;
-    });
-  });
+  let transformedIngredients = Object.keys(props.ingredients)
+    .map((igKey) => {
+      return [...Array(props.ingredients[igKey])].map((_, i) => {
+        return <BurgerIngredient key={igKey + i} type={igKey} />;
+      });
+    })
+    .reduce((arr, el) => {
+      return arr.concat(el);
+    }, []);
+  if (transformedIngredients.length === 0) {
+    transformedIngredients = <p>Please start adding ingredients</p>;
+  }
+
+  // Using REDUCE to flatten the array (see previous lines).
+  // Check to see if there are any ingredients.
+  // If there are no ingredients, display a message.
+  // 'transformedIngredients' is always going to be an array (just an array of empty arrays).
+  // So we can reduce the 'transformedIngredients' array.
+  // We can flatten this array to make sure that we pull out the values of our inner arrays,
+  // and create only one array that contains all these values.
+  console.log(transformedIngredients);
 
   return (
     <div className={classes.Burger}>
