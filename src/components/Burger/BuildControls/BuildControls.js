@@ -13,6 +13,13 @@ const controls = [
 
 const buildControls = (props) => (
   <div className={classes.BuildControls}>
+    {/* Show price of the burger.
+    The price is calculated in the BurgerBuilder container.
+    Add 'toFixed(2)' so that the number is fixed to 2 decimal places. */}
+    <p>
+      Current Price: <strong>${props.price.toFixed(2)}</strong>
+    </p>
+
     {/* Loop through all the controls and render a build control for each of them,
     using the constant ('controls') created above.
     Remember too since we're using MAP, we need a key */}
