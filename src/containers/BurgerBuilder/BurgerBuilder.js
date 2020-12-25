@@ -128,6 +128,10 @@ class BurgerBuilder extends Component {
     this.setState({ purchasing: true });
   };
 
+  purchaseCancelHandler = () => {
+    this.setState({ purchasing: false });
+  };
+
   render() {
     // Disable button when ingredients become 0.
     // Copy the 'ingredients' object (state from above) in an immutable way, and disribute it using the spread operator.
@@ -149,7 +153,10 @@ class BurgerBuilder extends Component {
       <Aux>
         {/* We want to add a property 'show' and use this to show the CSS animation in the Modal.module.css (transition).
         Then in Modal.js, we change the modal depending on the 'show' property (see Modal.js for inline styles / ternary --> 'transform: props.show', etc.). */}
-        <Modal show={this.state.purchasing}>
+        <Modal
+          show={this.state.purchasing}
+          modalClosed={this.purchaseCancelHandler}
+        >
           <OrderSummary ingredients={this.state.ingredients} />
         </Modal>
         <Burger ingredients={this.state.ingredients} />
