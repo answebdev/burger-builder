@@ -28,6 +28,7 @@ class BurgerBuilder extends Component {
     },
     totalPrice: 4,
     purchasable: false,
+    purchasing: false,
   };
 
   // Check ingredients we have in our state.
@@ -114,6 +115,19 @@ class BurgerBuilder extends Component {
     this.updatePurchaseState(updatedIngredients);
   };
 
+  // Do not use this syntax to create a function. You cannot use 'this' with this syntax (you'll get an error).
+  // This syntax will not work correctly if the method is triggered through an event (and we have an 'onClick' event in BuildControls.js that triggers this).
+  // Due to the way the 'this' keyword works in JavaScript, it will then NOT refer to the class...
+
+  // purchaseHandler() {
+  //   this.setState({ purchasing: true });
+  // }
+
+  // ...We must therefore use an arrow function, which basically contains the state, or context, of 'this':
+  purchaseHandler = () => {
+    this.setState({ purchasing: true });
+  };
+
   render() {
     // Disable button when ingredients become 0.
     // Copy the 'ingredients' object (state from above) in an immutable way, and disribute it using the spread operator.
@@ -133,7 +147,9 @@ class BurgerBuilder extends Component {
     }
     return (
       <Aux>
-        <Modal>
+        {/* We want to add a property 'show' and use this to show the CSS animation in the Modal.module.css (transition).
+        Then in Modal.js, we change the modal depending on the 'show' property (see Modal.js for inline styles / ternary --> 'transform: props.show', etc.). */}
+        <Modal show={this.state.purchasing}>
           <OrderSummary ingredients={this.state.ingredients} />
         </Modal>
         <Burger ingredients={this.state.ingredients} />
@@ -143,6 +159,7 @@ class BurgerBuilder extends Component {
           ingredientRemoved={this.removeIngredientHandler}
           disabled={disabledInfo}
           purchasable={this.state.purchasable}
+          ordered={this.purchaseHandler}
           price={this.state.totalPrice}
         />
       </Aux>
