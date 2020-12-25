@@ -25,7 +25,31 @@ class BurgerBuilder extends Component {
       meat: 2,
     },
     totalPrice: 4,
+    purchasable: false,
   };
+
+  // Check ingredients we have in our state.
+  // Create a new object 'ingredients' to create a new copy of our state (with the spread operator)
+  updatePurchaseState(ingredients) {
+    // Add up all the ingredients -
+    // Turn our object (in previous line) into an array of values:
+    const sum = Object.keys(ingredients)
+      .map((igKey) => {
+        // This will be the amount, because with 'ingredients' and [igKey] ('igKey' is the value for a given key),
+        // we're accessing a certain property in the 'ingredients' object; 'igKey' is salad, bacon,...so we are basically getting their values - the numbers (1, 1,...)/
+        // And this is what we return for each key:
+        return ingredients[igKey];
+        // So now we have an array of values.
+        // And now all we need to do is call REDUCE to reduce- this time, NOT to flatten the array,
+        // but to turn it into a single number: the sum of all ingredients.
+        // Note: 'sum' is the constantly updated current sum, up until the current iteration where this function is executed.
+        // And once this function is executed on ALL array elements, 'sum' is the final result.
+      })
+      .reduce((sum, el) => {
+        return sum + el;
+      }, 0);
+    this.setState({ purchasable: sum > 0 });
+  }
 
   addIngredientHandler = (type) => {
     // To add an ingredient, we first need to know what the old ingredient count is:
@@ -50,6 +74,7 @@ class BurgerBuilder extends Component {
     const oldPrice = this.state.totalPrice;
     const newPrice = oldPrice + priceAddition;
     this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
+    this.updatePurchaseState(updatedIngredients);
   };
 
   removeIngredientHandler = (type) => {
@@ -83,6 +108,8 @@ class BurgerBuilder extends Component {
 
     // Update the ingredients and the price.
     this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
+
+    this.updatePurchaseState(updatedIngredients);
   };
 
   render() {
@@ -111,6 +138,7 @@ class BurgerBuilder extends Component {
           ingredientAdded={this.addIngredientHandler}
           ingredientRemoved={this.removeIngredientHandler}
           disabled={disabledInfo}
+          purchasable={this.state.purchasable}
           price={this.state.totalPrice}
         />
       </Aux>
