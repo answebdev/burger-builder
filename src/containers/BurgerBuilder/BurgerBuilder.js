@@ -16,6 +16,7 @@ class BurgerBuilder extends Component {
   //   super(props);
   //   this.state = {...}
   // }
+
   state = {
     ingredients: {
       salad: 1,
@@ -51,15 +52,66 @@ class BurgerBuilder extends Component {
     this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
   };
 
-  removeIngredientHandler = (type) => {};
+  removeIngredientHandler = (type) => {
+    const oldCount = this.state.ingredients[type];
+
+    // Once we remove all the ingredients, we cannot go into negative numbers if we keep clicking the LESS button (i.e. we cannot have -1 bacon).
+    // We will get an error if we try to do so, because we cannot create an array to render from a negative value.
+    // So we need to check to see if we DO have ingredients to begin with.
+    // So the 'oldCount' of a given ingredient should be greater than 0.
+    // So if 'oldCount' is smaller or equal to 0, then we essentially want to RETURN, so that nothing happens,
+    // if we try to remove an ingredient that we don't have.
+
+    // It would even be better, of the the button became DISABLED - see down in RENDER method.
+    if (oldCount <= 0) {
+      return;
+    }
+
+    // Reduce the ingredient count by 1.
+    const updatedCount = oldCount - 1;
+    const updatedIngredients = {
+      ...this.state.ingredients,
+    };
+
+    updatedIngredients[type] = updatedCount;
+
+    const priceDeduction = INGREDIENT_PRICES[type];
+    const oldPrice = this.state.totalPrice;
+
+    // Deduct the price.
+    const newPrice = oldPrice - priceDeduction;
+
+    // Update the ingredients and the price.
+    this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
+  };
 
   render() {
+    // Disable button when ingredients become 0.
+    // Copy the 'ingredients' object (state from above) in an immutable way, and disribute it using the spread operator.
+    const disabledInfo = {
+      ...this.state.ingredients,
+    };
+    // But this object alone is not all the information we want, though.
+    // So loop through all the keys in 'disabledInfo', and check if this is 0 or less.
+    // And we'll update the 'disabledInfo' key (so, salad, meat, etc.) with the information off that check,
+    // so that the object will not have the shape of: salad, 0; meat, 0; etc.
+    // ...but simply if it should be disabled or not. So: salad, true; meat: true, etc.
+    // And 'true' will be the value that is assigned if it should be disabled.
+
+    // And then, we can pass this 'disabledInfo' to the BuildControls component down below (see below).
+    for (let key in disabledInfo) {
+      disabledInfo[key] = disabledInfo[key] <= 0;
+    }
     return (
       <Aux>
         <Burger ingredients={this.state.ingredients} />
 
         {/* Pass a property ('ingredientAdded') that holds a reference to 'addIngredientHandler' so we can hook this up to <BuildControl /> in BuildControls.js: */}
-        <BuildControls ingredientAdded={this.addIngredientHandler} />
+        <BuildControls
+          ingredientAdded={this.addIngredientHandler}
+          ingredientRemoved={this.removeIngredientHandler}
+          disabled={disabledInfo}
+        />
       </Aux>
     );
   }

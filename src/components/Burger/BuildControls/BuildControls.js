@@ -30,6 +30,11 @@ const buildControls = (props) => (
         // so on that MORE button, we'll add an 'onClick' listener,
         // and in there, we access 'props.added' (see BuildControl.js).
         added={() => props.ingredientAdded(ctrl.type)}
+        // Add a property ('removed' to remove ingredients); follow same logic as for adding ingredients (see previous line).
+        // Then, hook up this 'removed' property to the LESS button in BuildControl.js.
+        removed={() => props.ingredientRemoved(ctrl.type)}
+        // Set a 'disabled' property:
+        disabled={props.disabled[ctrl.type]}
       />
     ))}
   </div>
