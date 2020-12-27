@@ -13,6 +13,12 @@ class Layout extends Component {
     this.setState({ showSideDrawer: false });
   };
 
+  sideDrawerToggleHandler = () => {
+    this.setState((prevState) => {
+      return { showSideDrawer: !prevState.showSideDrawer };
+    });
+  };
+
   render() {
     return (
       // Auxiliary higher-order component to wrap and immediately output this component.
@@ -25,7 +31,7 @@ class Layout extends Component {
         This allows us to use this 'layout' component as a wrapper around the core content component we want to render
         to the screen. */}
         {/* <div>Toolbar, SideDrawer, Backdrop</div> */}
-        <Toolbar />
+        <Toolbar drawerToggleClicked={this.sideDrawerToggleHandler} />
         <SideDrawer
           open={this.state.showSideDrawer}
           closed={this.sideDrawerClosedHandler}
