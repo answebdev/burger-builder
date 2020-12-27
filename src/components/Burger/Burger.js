@@ -46,7 +46,7 @@ const burger = (props) => {
   // So we can reduce the 'transformedIngredients' array.
   // We can flatten this array to make sure that we pull out the values of our inner arrays,
   // and create only one array that contains all these values.
-  console.log(transformedIngredients);
+  // console.log(transformedIngredients);
 
   return (
     <div className={classes.Burger}>
