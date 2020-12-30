@@ -26,17 +26,28 @@ class BurgerBuilder extends Component {
   // }
 
   state = {
-    ingredients: {
-      salad: 1,
-      bacon: 1,
-      cheese: 2,
-      meat: 2,
-    },
+    // Ingredients is coming from the Firebase database:
+    ingredients: null,
     totalPrice: 4,
     purchasable: false,
     purchasing: false,
     loading: false,
+    error: false,
   };
+
+  // Fetch the data - send a request to Get the ingredients:
+  componentDidMount() {
+    axios
+      .get(
+        'https://react-burger-76228-default-rtdb.firebaseio.com/ingredients.json'
+      )
+      .then((response) => {
+        this.setState({ ingredients: response.data });
+      })
+      .catch((error) => {
+        this.setState({ error: true });
+      });
+  }
 
   // Check ingredients we have in our state.
   // Create a new object 'ingredients' to create a new copy of our state (with the spread operator)
@@ -186,18 +197,43 @@ class BurgerBuilder extends Component {
     for (let key in disabledInfo) {
       disabledInfo[key] = disabledInfo[key] <= 0;
     }
-    let orderSummary = (
-      <OrderSummary
-        ingredients={this.state.ingredients}
-        price={this.state.totalPrice}
-        purchaseCanceled={this.purchaseCancelHandler}
-        purchaseContinued={this.purchaseContinueHandler}
-      />
+
+    let orderSummary = null;
+    let burger = this.state.error ? (
+      <p style={{ textAlign: 'center' }}>Ingredients can't be loaded!</p>
+    ) : (
+      <Spinner />
     );
+
+    if (this.state.ingredients) {
+      burger = (
+        <Aux>
+          <Burger ingredients={this.state.ingredients} />;
+          {/* Pass a property ('ingredientAdded') that holds a reference to 'addIngredientHandler' so we can hook this up to <BuildControl /> in BuildControls.js: */}
+          <BuildControls
+            ingredientAdded={this.addIngredientHandler}
+            ingredientRemoved={this.removeIngredientHandler}
+            disabled={disabledInfo}
+            purchasable={this.state.purchasable}
+            ordered={this.purchaseHandler}
+            price={this.state.totalPrice}
+          />
+        </Aux>
+      );
+      orderSummary = (
+        <OrderSummary
+          ingredients={this.state.ingredients}
+          price={this.state.totalPrice}
+          purchaseCanceled={this.purchaseCancelHandler}
+          purchaseContinued={this.purchaseContinueHandler}
+        />
+      );
+    }
 
     if (this.state.loading) {
       orderSummary = <Spinner />;
     }
+
     return (
       <Aux>
         {/* We want to add a property 'show' and use this to show the CSS animation in the Modal.module.css (transition).
@@ -208,16 +244,7 @@ class BurgerBuilder extends Component {
         >
           {orderSummary}
         </Modal>
-        <Burger ingredients={this.state.ingredients} />
-        {/* Pass a property ('ingredientAdded') that holds a reference to 'addIngredientHandler' so we can hook this up to <BuildControl /> in BuildControls.js: */}
-        <BuildControls
-          ingredientAdded={this.addIngredientHandler}
-          ingredientRemoved={this.removeIngredientHandler}
-          disabled={disabledInfo}
-          purchasable={this.state.purchasable}
-          ordered={this.purchaseHandler}
-          price={this.state.totalPrice}
-        />
+        {burger}
       </Aux>
     );
   }
