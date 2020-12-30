@@ -8,17 +8,28 @@ const withErrorHandler = (WrappedComponent, axios) => {
       error: null,
     };
 
+    // Add interceptors so that we can intercept errors and show our error modal.
+    // We need to use 'componentWillMount' here instead of 'componentDidMount'.
+    // But since 'componentWillMount' is no longer in use, we may have to use a 'constructor' instead.
     componentWillMount() {
-      axios.interceptors.request.use((req) => {
+      this.reqInterceptor = axios.interceptors.request.use((req) => {
         this.setState({ error: null });
         return req;
       });
-      axios.interceptors.response.use(
+      this.resInterceptor = axios.interceptors.response.use(
         (res) => res,
         (error) => {
           this.setState({ error: error });
         }
       );
+    }
+
+    // Remove our interceptors (to prevent memory leaks).
+    // This lifecycle hook is executed at the point in time when the component is no longer required.
+    componentWillUnmount() {
+    //   console.log('Will Unmount', this.reqInterceptor, this.resInterceptor);
+      axios.interceptors.request.eject(this.reqInterceptor);
+      axios.interceptors.request.eject(this.resInterceptor);
     }
 
     errorConfirmedHandler = () => {
