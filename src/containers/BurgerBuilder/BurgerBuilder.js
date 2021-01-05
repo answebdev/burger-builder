@@ -152,32 +152,6 @@ class BurgerBuilder extends Component {
 
   purchaseContinueHandler = () => {
     // alert('You may continue...');
-    // this.setState({ loading: true });
-    // const order = {
-    //   ingredients: this.state.ingredients,
-    //   price: this.state.totalPrice,
-    //   customer: {
-    //     name: 'John Smith',
-    //     address: {
-    //       street: 'Smith Drive',
-    //       zipCode: '12345',
-    //       country: 'USA',
-    //     },
-    //     email: 'jsmith@test.com',
-    //   },
-    //   deliveryMethod: 'premium',
-    // };
-    // // Send request to backend:
-    // axios
-    //   // If you do not use an Axios instant, you can just use your entire Firebase endpoint here,
-    //   // and just add '/orders/json' to the end (and then also just import Axios as normal up above):
-    //   // .post(
-    //   //   'https://react-burger-76228-default-rtdb.firebaseio.com/orders.json',
-    //   //   order
-    //   // )
-    //   .post('/orders.json', order)
-    //   .then((response) => this.setState({ loading: false, purchasing: false }))
-    //   .catch((error) => this.setState({ loading: false, purchasing: false }));
 
     const queryParams = [];
     for (let i in this.state.ingredients) {
@@ -187,7 +161,7 @@ class BurgerBuilder extends Component {
           encodeURIComponent(this.state.ingredients[i])
       );
     }
-
+    queryParams.push('price=' + this.state.totalPrice);
     const queryString = queryParams.join('&');
     this.props.history.push({
       pathname: '/checkout',
