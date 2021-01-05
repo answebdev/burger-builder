@@ -32,8 +32,15 @@ class Orders extends Component {
   render() {
     return (
       <div>
-        <Order />
-        <Order />
+        {this.state.orders.map((order) => (
+          <Order
+            key={order.id}
+            ingredients={order.ingredients}
+            // By default, 'order.price' is a string, so add a '+' to convert it into a number.
+            // This makes things easier, e.g. when we want to use 'toFixed(2)' to have the number with 2 decimal places.
+            price={+order.price}
+          />
+        ))}
       </div>
     );
   }
