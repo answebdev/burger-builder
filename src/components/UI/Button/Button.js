@@ -13,6 +13,7 @@ const button = (props) => (
   // So we need to change this by using 'join' to join it with an empty space,
   // to have a list of classes, which is a string in the end.
   <button
+    disabled={props.disabled}
     className={[classes.Button, classes[props.btnType]].join(' ')}
     onClick={props.clicked}
   >
