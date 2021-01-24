@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import Aux from '../../hoc/Auxiliary/Auxiliary';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -10,6 +12,7 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 // import axios from 'axios';
 // Import our configured Axios instant:
 import axios from '../../axios-orders';
+import * as actionTypes from '../../store/actions';
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -27,7 +30,14 @@ class BurgerBuilder extends Component {
 
   state = {
     // Ingredients is coming from the Firebase database:
-    ingredients: null,
+    // ingredients: null,
+    // totalPrice: 4,
+    // purchasable: false,
+    // purchasing: false,
+    // loading: false,
+    // error: false,
+
+    // After adding Redux (no longer using local state for ingredients):
     totalPrice: 4,
     purchasable: false,
     purchasing: false,
@@ -37,16 +47,17 @@ class BurgerBuilder extends Component {
 
   // Fetch the data - send a request to Get the ingredients:
   componentDidMount() {
-    axios
-      .get(
-        'https://react-burger-76228-default-rtdb.firebaseio.com/ingredients.json'
-      )
-      .then((response) => {
-        this.setState({ ingredients: response.data });
-      })
-      .catch((error) => {
-        this.setState({ error: true });
-      });
+    // console.log(this.props);
+    // axios
+    //   .get(
+    //     'https://react-burger-76228-default-rtdb.firebaseio.com/ingredients.json'
+    //   )
+    //   .then((response) => {
+    //     this.setState({ ingredients: response.data });
+    //   })
+    //   .catch((error) => {
+    //     this.setState({ error: true });
+    //   });
   }
 
   // Check ingredients we have in our state.
@@ -173,7 +184,10 @@ class BurgerBuilder extends Component {
     // Disable button when ingredients become 0.
     // Copy the 'ingredients' object (state from above) in an immutable way, and disribute it using the spread operator.
     const disabledInfo = {
-      ...this.state.ingredients,
+      // ...this.state.ingredients,
+
+      // Redux code:
+      ...this.props.ings,
     };
     // But this object alone is not all the information we want, though.
     // So loop through all the keys in 'disabledInfo', and check if this is 0 or less.
@@ -194,14 +208,18 @@ class BurgerBuilder extends Component {
       <Spinner />
     );
 
-    if (this.state.ingredients) {
+    // if (this.state.ingredients) {
+    // Redux code:
+    if (this.props.ings) {
       burger = (
         <Aux>
-          <Burger ingredients={this.state.ingredients} />;
+          {/* <Burger ingredients={this.state.ingredients} />; */}
+          {/* Redux: */}
+          <Burger ingredients={this.props.ings} />;
           {/* Pass a property ('ingredientAdded') that holds a reference to 'addIngredientHandler' so we can hook this up to <BuildControl /> in BuildControls.js: */}
           <BuildControls
-            ingredientAdded={this.addIngredientHandler}
-            ingredientRemoved={this.removeIngredientHandler}
+            ingredientAdded={this.props.onIngredientAdded}
+            ingredientRemoved={this.props.onIngredientRemoved}
             disabled={disabledInfo}
             purchasable={this.state.purchasable}
             ordered={this.purchaseHandler}
@@ -211,7 +229,7 @@ class BurgerBuilder extends Component {
       );
       orderSummary = (
         <OrderSummary
-          ingredients={this.state.ingredients}
+          ingredients={this.props.ings}
           price={this.state.totalPrice}
           purchaseCanceled={this.purchaseCancelHandler}
           purchaseContinued={this.purchaseContinueHandler}
@@ -239,4 +257,25 @@ class BurgerBuilder extends Component {
   }
 }
 
-export default withErrorHandler(BurgerBuilder, axios);
+const mapStateToProps = (state) => {
+  return {
+    ings: state.ingredients,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onIngredientAdded: (ingName) =>
+      dispatch({ type: actionTypes.ADD_INGREDIENT, ingredientName: ingName }),
+    onIngredientRemoved: (ingName) =>
+      dispatch({
+        type: actionTypes.REMOVE_INGREDIENT,
+        ingredientName: ingName,
+      }),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withErrorHandler(BurgerBuilder, axios));
