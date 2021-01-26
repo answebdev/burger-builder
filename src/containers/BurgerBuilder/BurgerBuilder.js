@@ -21,6 +21,11 @@ class BurgerBuilder extends Component {
   //   this.state = {...}
   // }
 
+  // These state properties (purchasing, loading, error) are relevant to our UI state only (e.g. should
+  // we display a modal, should we display an error message,...).
+  // The other properties were moved from here and managed by the global Redux store.
+  // Both of these types of state can co-exist like this together with Redux.
+  // You can put everything into Redux, but you don't have to.
   state = {
     // Ingredients is coming from the Firebase database:
     // ingredients: null,
@@ -32,7 +37,7 @@ class BurgerBuilder extends Component {
 
     // After adding Redux (no longer using local state for ingredients):
     // totalPrice: 4,
-    purchasable: false,
+    // purchasable: false,
     purchasing: false,
     loading: false,
     error: false,
@@ -73,7 +78,7 @@ class BurgerBuilder extends Component {
       .reduce((sum, el) => {
         return sum + el;
       }, 0);
-    this.setState({ purchasable: sum > 0 });
+    return sum > 0;
   }
 
   // REMOVED addIngredientHandler AFTER ADDING IN REDUX
@@ -215,7 +220,7 @@ class BurgerBuilder extends Component {
             ingredientAdded={this.props.onIngredientAdded}
             ingredientRemoved={this.props.onIngredientRemoved}
             disabled={disabledInfo}
-            purchasable={this.state.purchasable}
+            purchasable={this.updatePurchaseState(this.props.ings)}
             ordered={this.purchaseHandler}
             price={this.props.price}
           />
