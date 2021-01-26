@@ -107,6 +107,7 @@ class BurgerBuilder extends Component {
   //   this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
   //   this.updatePurchaseState(updatedIngredients);
   // };
+
   // REMOVED removeIngredientHandler AFTER ADDING IN REDUX
   // removeIngredientHandler = (type) => {
   //   const oldCount = this.state.ingredients[type];
@@ -163,20 +164,22 @@ class BurgerBuilder extends Component {
   purchaseContinueHandler = () => {
     // alert('You may continue...');
 
-    const queryParams = [];
-    for (let i in this.state.ingredients) {
-      queryParams.push(
-        encodeURIComponent(i) +
-          '=' +
-          encodeURIComponent(this.state.ingredients[i])
-      );
-    }
-    queryParams.push('price=' + this.state.totalPrice);
-    const queryString = queryParams.join('&');
-    this.props.history.push({
-      pathname: '/checkout',
-      search: '?' + queryString,
-    });
+    // REMOVED AFTER ADDING IN REDUX:
+    // const queryParams = [];
+    // for (let i in this.state.ingredients) {
+    //   queryParams.push(
+    //     encodeURIComponent(i) +
+    //       '=' +
+    //       encodeURIComponent(this.state.ingredients[i])
+    //   );
+    // }
+    // queryParams.push('price=' + this.state.totalPrice);
+    // const queryString = queryParams.join('&');
+    // this.props.history.push({
+    //   pathname: '/checkout',
+    //   search: '?' + queryString,
+    // });
+    this.props.history.push('/checkout');
   };
 
   render() {
