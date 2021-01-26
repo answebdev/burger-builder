@@ -14,13 +14,6 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import axios from '../../axios-orders';
 import * as actionTypes from '../../store/actions';
 
-const INGREDIENT_PRICES = {
-  salad: 0.5,
-  bacon: 0.7,
-  cheese: 0.4,
-  meat: 1.3,
-};
-
 class BurgerBuilder extends Component {
   // A modern alternative for adding state:
   // constructor(props) {
@@ -38,7 +31,7 @@ class BurgerBuilder extends Component {
     // error: false,
 
     // After adding Redux (no longer using local state for ingredients):
-    totalPrice: 4,
+    // totalPrice: 4,
     purchasable: false,
     purchasing: false,
     loading: false,
@@ -83,66 +76,67 @@ class BurgerBuilder extends Component {
     this.setState({ purchasable: sum > 0 });
   }
 
-  addIngredientHandler = (type) => {
-    // To add an ingredient, we first need to know what the old ingredient count is:
-    const oldCount = this.state.ingredients[type];
+  // REMOVED addIngredientHandler AFTER ADDING IN REDUX
+  // addIngredientHandler = (type) => {
+  //   // To add an ingredient, we first need to know what the old ingredient count is:
+  //   const oldCount = this.state.ingredients[type];
 
-    // Calculate the updated count:
-    const updatedCount = oldCount + 1;
+  //   // Calculate the updated count:
+  //   const updatedCount = oldCount + 1;
 
-    // Update the ingredients (state should be updated in an immutable way, so: create a new object,
-    // and use the spread operator to distribute the properties of the old ingredients state into this new object):
-    const updatedIngredients = {
-      ...this.state.ingredients,
-    };
-    // Take updated ingredients object, access the 'type' for which we have to update the ingredients,
-    // and set the count (the value) - which is just the amount of the ingredients - equal to 'updatedCount':
-    updatedIngredients[type] = updatedCount;
+  //   // Update the ingredients (state should be updated in an immutable way, so: create a new object,
+  //   // and use the spread operator to distribute the properties of the old ingredients state into this new object):
+  //   const updatedIngredients = {
+  //     ...this.state.ingredients,
+  //   };
+  //   // Take updated ingredients object, access the 'type' for which we have to update the ingredients,
+  //   // and set the count (the value) - which is just the amount of the ingredients - equal to 'updatedCount':
+  //   updatedIngredients[type] = updatedCount;
 
-    // Call 'this.setState' to update the ingredients in our state.
-    // Update the total price - we need to have a mapping of which ingredient costs what (so let's create a constant, INGREDIENT_PRICES - see above - which will be an object).
-    // So, update the total price with the type for the price we added up above in the INGREDIENT_PRICES object.
-    const priceAddition = INGREDIENT_PRICES[type];
-    const oldPrice = this.state.totalPrice;
-    const newPrice = oldPrice + priceAddition;
-    this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
-    this.updatePurchaseState(updatedIngredients);
-  };
+  //   // Call 'this.setState' to update the ingredients in our state.
+  //   // Update the total price - we need to have a mapping of which ingredient costs what (so let's create a constant, INGREDIENT_PRICES - see above - which will be an object).
+  //   // So, update the total price with the type for the price we added up above in the INGREDIENT_PRICES object.
+  //   const priceAddition = INGREDIENT_PRICES[type];
+  //   const oldPrice = this.state.totalPrice;
+  //   const newPrice = oldPrice + priceAddition;
+  //   this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
+  //   this.updatePurchaseState(updatedIngredients);
+  // };
+  // REMOVED removeIngredientHandler AFTER ADDING IN REDUX
+  // removeIngredientHandler = (type) => {
+  //   const oldCount = this.state.ingredients[type];
 
-  removeIngredientHandler = (type) => {
-    const oldCount = this.state.ingredients[type];
+  //   // Once we remove all the ingredients, we cannot go into negative numbers if we keep clicking the LESS button (i.e. we cannot have -1 bacon).
+  //   // We will get an error if we try to do so, because we cannot create an array to render from a negative value.
+  //   // So we need to check to see if we DO have ingredients to begin with.
+  //   // So the 'oldCount' of a given ingredient should be greater than 0.
+  //   // So if 'oldCount' is smaller or equal to 0, then we essentially want to RETURN, so that nothing happens,
+  //   // if we try to remove an ingredient that we don't have.
 
-    // Once we remove all the ingredients, we cannot go into negative numbers if we keep clicking the LESS button (i.e. we cannot have -1 bacon).
-    // We will get an error if we try to do so, because we cannot create an array to render from a negative value.
-    // So we need to check to see if we DO have ingredients to begin with.
-    // So the 'oldCount' of a given ingredient should be greater than 0.
-    // So if 'oldCount' is smaller or equal to 0, then we essentially want to RETURN, so that nothing happens,
-    // if we try to remove an ingredient that we don't have.
+  //   // It would even be better, of the the button became DISABLED - see down in RENDER method.
+  //   if (oldCount <= 0) {
+  //     return;
+  //   }
 
-    // It would even be better, of the the button became DISABLED - see down in RENDER method.
-    if (oldCount <= 0) {
-      return;
-    }
+  //   // Reduce the ingredient count by 1.
+  //   const updatedCount = oldCount - 1;
+  //   const updatedIngredients = {
+  //     ...this.state.ingredients,
+  //   };
 
-    // Reduce the ingredient count by 1.
-    const updatedCount = oldCount - 1;
-    const updatedIngredients = {
-      ...this.state.ingredients,
-    };
+  //   updatedIngredients[type] = updatedCount;
 
-    updatedIngredients[type] = updatedCount;
+  //   const priceDeduction = INGREDIENT_PRICES[type];
+  //   const oldPrice = this.state.totalPrice;
 
-    const priceDeduction = INGREDIENT_PRICES[type];
-    const oldPrice = this.state.totalPrice;
+  //   // Deduct the price.
+  //   const newPrice = oldPrice - priceDeduction;
 
-    // Deduct the price.
-    const newPrice = oldPrice - priceDeduction;
+  //   // Update the ingredients and the price.
+  //   this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
 
-    // Update the ingredients and the price.
-    this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
-
-    this.updatePurchaseState(updatedIngredients);
-  };
+  //   this.updatePurchaseState(updatedIngredients);
+  // };
 
   // Do not use this syntax to create a function. You cannot use 'this' with this syntax (you'll get an error).
   // This syntax will not work correctly if the method is triggered through an event (and we have an 'onClick' event in BuildControls.js that triggers this).
@@ -223,14 +217,14 @@ class BurgerBuilder extends Component {
             disabled={disabledInfo}
             purchasable={this.state.purchasable}
             ordered={this.purchaseHandler}
-            price={this.state.totalPrice}
+            price={this.props.price}
           />
         </Aux>
       );
       orderSummary = (
         <OrderSummary
           ingredients={this.props.ings}
-          price={this.state.totalPrice}
+          price={this.props.price}
           purchaseCanceled={this.purchaseCancelHandler}
           purchaseContinued={this.purchaseContinueHandler}
         />
@@ -260,6 +254,7 @@ class BurgerBuilder extends Component {
 const mapStateToProps = (state) => {
   return {
     ings: state.ingredients,
+    price: state.totalPrice,
   };
 };
 
