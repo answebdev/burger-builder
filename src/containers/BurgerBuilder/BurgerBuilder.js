@@ -43,7 +43,8 @@ class BurgerBuilder extends Component {
     error: false,
   };
 
-  // Fetch the data - send a request to Get the ingredients:
+  // Fetch the data - send a request to Get the ingredients -
+  // sent to Firebase backend:
   componentDidMount() {
     // console.log(this.props);
     // axios
