@@ -112,22 +112,22 @@ class ContactData extends Component {
       orderData: formData,
     };
     // // Send request to backend:
-    axios
-      // If you do not use an Axios instant, you can just use your entire Firebase endpoint here,
-      // and just add '/orders/json' to the end (and then also just import Axios as normal up above):
-      // .post(
-      //   'https://react-burger-76228-default-rtdb.firebaseio.com/orders.json',
-      //   order
-      // )
+    // axios
+    // If you do not use an Axios instant, you can just use your entire Firebase endpoint here,
+    // and just add '/orders/json' to the end (and then also just import Axios as normal up above):
+    // .post(
+    //   'https://react-burger-76228-default-rtdb.firebaseio.com/orders.json',
+    //   order
+    // )
 
-      .post('/orders.json', order)
-      .then((response) => {
-        this.setState({ loading: false });
-        this.props.history.push('/');
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-      });
+    // .post('/orders.json', order)
+    // .then((response) => {
+    //   this.setState({ loading: false });
+    //   this.props.history.push('/');
+    // })
+    // .catch((error) => {
+    //   this.setState({ loading: false });
+    // });
   };
 
   checkValidation(value, rules) {
