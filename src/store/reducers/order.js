@@ -1,12 +1,19 @@
+import { act } from 'react-dom/test-utils';
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
   orders: [],
   loading: false,
+  purchased: false,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case actionTypes.PURCHASE_INIT:
+      return {
+        ...state,
+        purchased: false,
+      };
     case actionTypes.PURCHASE_BURGER_START:
       return {
         ...state,
@@ -21,6 +28,7 @@ const reducer = (state = initialState, action) => {
         // Copy the old state
         ...state,
         loading: false,
+        purchased: true,
         // concat() returns a new array, and therefore, we are adding this immutably.
         orders: state.orders.concat(newOrder),
       };
