@@ -11,7 +11,19 @@ import burgerBuilderReducer from './store/reducers/burgerBuilder';
 import orderReducer from './store/reducers/order';
 import authReducer from './store/reducers/auth';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+// Environment Variables.
+// To unlock our Redux Dev Tools only if we are in development mode and not if we are in production mode.
+// See: https://www.udemy.com/course/react-the-complete-guide-incl-redux/learn/lecture/8246384#questions/6420906
+// So now Redux Dev Tools will be available only in the development environment:
+const composeEnhancers =
+  process.env.REACT_APP_NODE_ENVX === 'development'
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    : null || compose;
+
+// const composeEnhancers =
+//   process.env.NODE_ENV === 'development'
+//     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+//     : null || compose;
 
 const rootReducer = combineReducers({
   burgerBuilder: burgerBuilderReducer,
