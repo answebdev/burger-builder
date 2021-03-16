@@ -4,9 +4,10 @@ import Button from '../../UI/Button/Button';
 
 class OrderSummary extends Component {
   // Implement a method to see when this component actually updates:
-  componentDidUpdate() {
-    console.log('[OrderSummary] DidUpdate');
-  }
+  // componentDidUpdate() {
+  //   console.log('[OrderSummary] DidUpdate');
+  // }
+
   render() {
     // We will get the 'ingredients' in an object format.
     // As in BurgerBuilder.js, use Object.keys to transform this into an array of keys (so, salad, cheese, etc.).
@@ -22,6 +23,7 @@ class OrderSummary extends Component {
         );
       }
     );
+
     return (
       <Aux>
         <h3>Your Order</h3>
