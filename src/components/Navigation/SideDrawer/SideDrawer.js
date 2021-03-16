@@ -17,7 +17,7 @@ const sideDrawer = (props) => {
       {/* Since 'show' is a Boolean property, you don't need to assign a value and say 'show={true}' if it's true.
       You can just say 'show'. Just by adding it, it will be set to 'true'. */}
       <Backdrop show={props.open} clicked={props.closed} />
-      <div className={attachedClasses.join(' ')}>
+      <div className={attachedClasses.join(' ')} onClick={props.closed}>
         <div className={classes.Logo}>
           <Logo />
         </div>
