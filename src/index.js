@@ -25,6 +25,16 @@ const composeEnhancers =
 //     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
 //     : null || compose;
 
+// If you use Firefox and do not have Redux Dev Tools installed on Firefox, you will see this error:
+// TypeError: composeEnhancers is not a function
+
+// composeEnhancers requires the Redux dev tools to be installed and available in the browser.
+// Instead of using the above lines (const composeEnhancers = process...), you can change just use this to make it work in all cases:
+
+// const composeEnhancers = compose;
+
+// The error should now be gone.
+
 const rootReducer = combineReducers({
   burgerBuilder: burgerBuilderReducer,
   order: orderReducer,
