@@ -17,12 +17,35 @@ import NavigationItem from './NavigationItem/NavigationItem';
 configure({ adapter: new Adapter() });
 
 describe('<NavigationItems />', () => {
+  // The 'beforeEach' function will automatically be executed BEFORE EACH of the tests.
+  // Since we use 'wrapper' more than once in our tests, we can do it this way.
+  // This will make the 'wrapper' variable available in all our tests.
+  let wrapper;
+  beforeEach(() => {
+    wrapper = shallow(<NavigationItems />);
+  });
+
   it('should render two <NaivigationItems /> elements if not authenticated', () => {
     // Render component shallow-ly and store it in the 'wrapper' constant.
-    const wrapper = shallow(<NavigationItems />);
+    // const wrapper = shallow(<NavigationItems />);
 
     // Look into the wrapper.
     // We expect to find 2 'NavigationItem' components.
     expect(wrapper.find(NavigationItem)).toHaveLength(2);
+  });
+
+  it('should render three <NaivigationItems /> elements if authenticated', () => {
+    // To see if it renders 3 items if authenticated, we need to pass the 'isAuthenticated' prop.
+    // Passing it here as 'isAuthenticated' will automatically pass it as 'true'.
+    // const wrapper = shallow(<NavigationItems isAuthenticated />);
+
+    // OPTIONE 1:
+    // wrapper = shallow(<NavigationItems isAuthenticated />);
+
+    // OPTION 2 - using the 'setProps' Enzyme helper method.
+    // This can be used on anything that stores a shallowy or other rendered React element.
+    wrapper.setProps({ isAuthenticated: true });
+    // We expect to find 3 'NavigationItem' components.
+    expect(wrapper.find(NavigationItem)).toHaveLength(3);
   });
 });
