@@ -49,7 +49,7 @@ describe('<NavigationItems />', () => {
     expect(wrapper.find(NavigationItem)).toHaveLength(3);
   });
 
-  it('should render logout if authenticated', () => {
+  it('should render logout button if authenticated', () => {
     wrapper.setProps({ isAuthenticated: true });
     // We want to check for the existence of one specific node (we use 'contains' for nodes) - the one with the "Logout" text.
     expect(
